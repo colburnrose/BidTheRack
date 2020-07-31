@@ -17,9 +17,13 @@ namespace Infrastructure.Data.Repository
         }
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _ctx.Products.FindAsync(id);
+            return await _ctx.Products.Include(o => o.ProductBrand).Include(o => o.ProductType).FirstOrDefaultAsync(p => p.Id == id);
         }
-
-        public async Task<IReadOnlyList<Product>> GetProductsAsync() => await _ctx.Products.ToListAsync();
+        public async Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync() => await _ctx.ProductBrands.ToListAsync();
+        public async Task<IReadOnlyList<Product>> GetProductsAsync()
+        {
+            return await _ctx.Products.Include(o => o.ProductBrand).Include(o => o.ProductType).ToListAsync();
+        }
+        public async Task<IReadOnlyList<ProductType>> GetProductTypesAsync() => await _ctx.ProductTypes.ToListAsync();
     }
 }

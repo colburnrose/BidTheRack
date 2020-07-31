@@ -23,6 +23,11 @@ namespace API
                 {
                     var context = services.GetRequiredService<StoreContext>();
                     await context.Database.MigrateAsync();
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT ProductBrands ON");
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT ProductTypes ON");
+                    await StoreContextSeed.SeedAsync(context, loggerFactory);
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT ProductBrands OFF");
+                    context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT ProductTypes OFF");
                 }
                 catch (Exception ex)
                 {
