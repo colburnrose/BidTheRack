@@ -17,6 +17,12 @@ namespace Infrastructure.Data
         {
             _ctx = ctx;
         }
+
+        public async Task<int> CountAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
+        }
+
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
             return await _ctx.Set<T>().ToListAsync();
