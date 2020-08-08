@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos;
@@ -28,9 +29,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductDTO>>> GetProducts()
+        public async Task<ActionResult<List<ProductDTO>>> GetProducts([FromQuery]ProductSpecParams specParams)
         {
-            var spec = new ProductsWithTypesAndBrandsSpecification(); ;
+            var spec = new ProductsWithTypesAndBrandsSpecification(specParams); ;
             var products = await _productRepo.ListAllAsync(spec);
             //return products.Select(product => new ProductDTO
             //{
