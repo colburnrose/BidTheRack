@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { IBasket, IBasketItem, Basket } from '../shared/models/basket';
+import { IBasket, IBasketItem, Basket, IBasketTotals } from '../shared/models/basket';
 import { IProduct } from '../shared/models/product';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
@@ -13,17 +13,30 @@ import { map } from 'rxjs/operators';
 })
 export class BasketService {
   baseUrl = environment.apiUrl;
+
   private basketSource = new BehaviorSubject<IBasket>(null);
   basket$ = this.basketSource.asObservable();
 
+  private basketTotalCount = new BehaviorSubject<IBasketTotals>(null);
+  basketTotal$ = this.basketTotalCount.asObservable();
+
+
   constructor(private http: HttpClient) { }
+
+  getBasketTotal() {
+    const basket = this.getCurrentBasket();
+    const shipping = 0;
+    const subtotal = basket.items.reduce((result, item) => (item.price * item.quantity) + result, 0);
+    const total = subtotal + shipping;
+    this.basketTotalCount.next({shipping, subtotal, total})
+  }
 
   getBasket(id: string){
     return this.http.get(this.baseUrl + 'basket?id=' + id)
     .pipe(
       map((basket: IBasket) => {
         this.basketSource.next(basket);
-        console.log(this.getCurrentBasket());
+        this.getBasketTotal();
       })
     );
   }
@@ -31,6 +44,7 @@ export class BasketService {
   setBasket(basket: IBasket){
     return this.http.post(this.baseUrl + 'basket', basket).subscribe((response: IBasket) => {
       this.basketSource.next(response);
+      this.getBasketTotal();
     }, error => {
       console.log(error);
     });
@@ -48,7 +62,6 @@ export class BasketService {
   }
 
   private addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
-    console.log(items);
     const index = items.findIndex(i => i.id === itemToAdd.id);
     if(index === -1){
       itemToAdd.quantity = quantity;

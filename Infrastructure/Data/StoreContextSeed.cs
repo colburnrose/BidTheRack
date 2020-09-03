@@ -28,6 +28,9 @@ namespace Infrastructure.Data
                         {
                             context.ProductBrands.Add(item);
                         };
+                        //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT ProductBrands ON");
+                        await context.SaveChangesAsync();
+                        //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT ProductBrands OFF");
                         transaction.Commit();
                     }
                     if (!context.ProductTypes.Any())
@@ -39,7 +42,9 @@ namespace Infrastructure.Data
                         {
                             context.ProductTypes.Add(item);
                         }
+                        //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT ProductTypes ON");
                         await context.SaveChangesAsync();
+                        //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT ProductTypes OFF");
                         transaction.Commit();
                     }
                     if (!context.Products.Any())
@@ -51,8 +56,10 @@ namespace Infrastructure.Data
                         {
                             context.Products.Add(item);
                         }
+                        //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Products ON");
                         await context.SaveChangesAsync();
-                        transaction.Commit();
+                        //context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Products OFF");
+                        //transaction.Commit();
                     }
                 }
                 

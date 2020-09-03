@@ -1,5 +1,5 @@
 
-<div class="container mt-5">
+<div class="container mt-2">
     <div *ngIf="(basket$ | async) === null">
         <p>There are no items in your basket.</p>
     </div>
@@ -57,13 +57,24 @@
                                         <td class="align-middle">
                                             <strong>{{item.price * item.quantity | currency}}</strong>
                                         </td>
-                                        <td class="align-middle">
-                                            <button><i fas fa-trash></i>Remove Item</button>
+                                        <td class="align-middle text-center">
+                                            <a class="text-danger">
+                                                <i class="fa fa-trash" style="font-size: 2em;"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 offset-6">
+                        <app-order-summary></app-order-summary>
+                        <a routerLink="/checkout" class="btn btn-outline-primary py-2 btn-block">
+                            Proceed to Checkout
+                        </a>
                     </div>
                 </div>
             </div>
